@@ -1,9 +1,9 @@
 # Ubuntu
 
-### Create Launcher
+### Create Launcher for external Applications
 
-Files in   
-/usr/local/share or ~/.local/share/applications
+Files in  
+/usr/local/share or \(as overwrite usr local defaults?\) in ~/.local/share/applications
 
 eclipse.desktop
 
