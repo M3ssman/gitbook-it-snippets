@@ -18,5 +18,5 @@ Categories=Development;IDE;
 Type=Application
 ```
 
-
++ make file executable
 
