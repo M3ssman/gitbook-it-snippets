@@ -45,7 +45,15 @@ Conky-Manager \(optional\)
 ```
 $ sudo apt-add-repository -y ppa:teejee2008/ppa
 $ sudo apt-get update
-$ sudo apt-get install conky-manager 
+$ sudo apt-get install conky-manager
+```
+
+### Launcher Position
+
+* http://ubuntuhandbook.org/index.php/2016/03/ubuntu-16-04-move-unity-launcher-to-bottom/
+
+```
+gsettings set com.canonical.Unity.Launcher launcher-position Bottom
 ```
 
 
