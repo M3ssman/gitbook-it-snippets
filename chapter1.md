@@ -50,7 +50,7 @@ $ sudo apt-get install conky-manager
 
 #### Conky Autostart
 
-* create shellscript that starts
+* create shellscript that starts conky in ~ Folder
 * add script to ~/.config/autostart or open "Startprogramme"
 
 ### Launcher Position
