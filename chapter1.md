@@ -48,9 +48,14 @@ $ sudo apt-get update
 $ sudo apt-get install conky-manager
 ```
 
+#### Conky Autostart
+
+* create shellscript that starts
+* add script to ~/.config/autostart or open "Startprogramme"
+
 ### Launcher Position
 
-* http://ubuntuhandbook.org/index.php/2016/03/ubuntu-16-04-move-unity-launcher-to-bottom/
+* [http://ubuntuhandbook.org/index.php/2016/03/ubuntu-16-04-move-unity-launcher-to-bottom/](http://ubuntuhandbook.org/index.php/2016/03/ubuntu-16-04-move-unity-launcher-to-bottom/)
 
 ```
 gsettings set com.canonical.Unity.Launcher launcher-position Bottom
