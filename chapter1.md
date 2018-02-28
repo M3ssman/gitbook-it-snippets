@@ -51,7 +51,18 @@ $ sudo apt-get install conky-manager
 #### Conky Autostart
 
 * create shellscript that starts conky in ~ Folder
-* add script to ~/.config/autostart or open "Startprogramme"
+* add desktop entry to ~/.config/autostart \(or open "Startprogramme", select script\)
+  ```
+  [Desktop Entry]
+  Type=Application
+  Exec="~/.conkystartup.sh"
+  Hidden=false
+  NoDisplay=false
+  X-GNOME-Autostart-enabled=true
+  Comment=AutoStart for Conky
+  ```
+
+
 
 ### Launcher Position
 
