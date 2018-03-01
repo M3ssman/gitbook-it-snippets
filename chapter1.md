@@ -51,9 +51,14 @@ $ sudo apt-get install conky-manager
 #### Conky Autostart
 
 * see 
-  * https://www.lifewire.com/beginners-guide-to-conky-4043352
-  * https://www.linux.com/learn/how-install-and-configure-conky
+  * [https://www.lifewire.com/beginners-guide-to-conky-4043352](https://www.lifewire.com/beginners-guide-to-conky-4043352)
+  * [https://www.linux.com/learn/how-install-and-configure-conky](https://www.linux.com/learn/how-install-and-configure-conky)
 * create shellscript that starts conky in ~ Folder
+  ```
+  #!/bin/bash
+  sleep 20
+  conky -b &
+  ```
 * add desktop entry to ~/.config/autostart \(or open "Startprogramme", select script\)
   ```
   [Desktop Entry]
