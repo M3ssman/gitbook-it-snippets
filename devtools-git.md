@@ -37,9 +37,12 @@ git clone <uri> <optional-local-path>
 * git log  
   `git log -3 # fetch 3 latest commits + message`
 
+* enhance log level for sh  
+  `GIT_SSH_COMMAND="ssh -v" git clone <url>` 
+
 ### Read
 
-`git fetch --tags # fetch all in local clone, even tags` 
+`git fetch --tags # fetch all in local clone, even tags`
 
 ### Branches
 
@@ -60,13 +63,13 @@ git clone <uri> <optional-local-path>
   `git diff master feature/<x>`
 
 * rename  
-  `git branch -m <newname> # if inside to rename branch                                                
+  `git branch -m <newname> # if inside to rename branch                                                  
    git branch -m <old-name> <new-name> # when not inside branch to rename`
 
 * delete  
-  `git branch -d the_deletedbranch # local repository                                          
-   git push origin :thedeletedbranch # push delete to remote origin      
-   git push origin --delete thedeletedbranch # or like this    
+  `git branch -d the_deletedbranch # local repository                                            
+   git push origin :thedeletedbranch # push delete to remote origin        
+   git push origin --delete thedeletedbranch # or like this      
    git fetch origin --prune # remove local refs to branches that dont exists remote anymore`
 
 * copy files between branches  
@@ -83,26 +86,30 @@ git clone <uri> <optional-local-path>
 
 ### Tags
 
+remote
+
+git 
+
 create  
 `git tag -a v3.6.13 -m "first tag ref#39046 1min"`
 
 push to origin  
-`git push origin master --tags  # pushed all local tags                              
+`git push origin master --tags  # pushed all local tags                                
  git push origin v2.0.4         # pushed only tag v2.0.4`
 
 delete  
-`git tag --delete v1.5.7 # delete local                            
+`git tag --delete v1.5.7 # delete local                              
  git push origin :v1.5.7 # push delete action to origin`
 
 ### Reverts
 
 Re-checkout over local changed work copy  
-`git checkout -- <project>/src/main/java/<path/to>.java # reset specific file                        
+`git checkout -- <project>/src/main/java/<path/to>.java # reset specific file                          
  git checkout -- . # try to re-checkout anything`
 
 Re-set hard \(remove any local changes and additions\) local working copy to latest repo version  
-`git reset --hard origin/webcat-webgui                                          
- git reset --hard HEAD # latest commit of current branch                                          
+`git reset --hard origin/webcat-webgui                                            
+ git reset --hard HEAD # latest commit of current branch                                            
  git reset --hard 61237694001ef1ef26e0c7d9e7c57e2f442cbeb6 # to a specific commit`
 
 amed stuff  
@@ -111,6 +118,6 @@ amed stuff
 ### Stash
 
 `git stash # add current commit stage to stash`  
-`git stash pop # remove last stash from stack and returns it                
+`git stash pop # remove last stash from stack and returns it                  
  git stash list # list all stashed commits`
 
