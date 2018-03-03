@@ -45,7 +45,7 @@ git clone <uri> <optional-local-path>
   `git diff master feature/<x>`
 
 * rename  
-  `git branch -m <newname> # if inside to rename branch    
+  `git branch -m <newname> # if inside to rename branch      
    git branch -m <old-name> <new-name> # when not inside branch to rename`
 
 * delete
@@ -59,6 +59,16 @@ git clone <uri> <optional-local-path>
   `git commit -m "added file/package from src to des"`
 
 ### Commits
+
+### Reverts
+
+Re-checkout over local changed work copy  
+`git checkout -- adword-imports-data/src/main/java/com/unister/semweb/adword/imports/data/impl/JdbcSemDAO.java` 
+
+Re-set local working copy to latest HEAD repo version  
+`git reset --hard origin/webcat-webgui` 
+
+
 
 
 
