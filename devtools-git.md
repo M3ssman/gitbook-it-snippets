@@ -34,6 +34,9 @@ git clone <uri> <optional-local-path>
   * `git config --get remote.origin.url` OR `git remote show origin`
   * `git remote set-url origin <uri>.git`
 
+* git log  
+  `git log -3 # fetch 3 latest commits + message` 
+
 ### Branches
 
 * new from current one
@@ -50,11 +53,11 @@ git clone <uri> <optional-local-path>
   `git diff master feature/<x>`
 
 * rename  
-  `git branch -m <newname> # if inside to rename branch                
+  `git branch -m <newname> # if inside to rename branch                  
    git branch -m <old-name> <new-name> # when not inside branch to rename`
 
 * delete  
-  `git branch -d the_deleted_branch # local repository          
+  `git branch -d the_deleted_branch # local repository            
    git push origin :the_deleted_branch # push delete to remote origin`
 
 * copy files between branches  
@@ -72,7 +75,7 @@ Re-checkout over local changed work copy
 `git checkout -- <project>/src/main/java/<path/to>.java`
 
 Re-set hard \(remove any local changes and additions\) local working copy to latest repo version  
-`git reset --hard origin/webcat-webgui          
- git reset --hard HEAD # latest commit of current branch          
+`git reset --hard origin/webcat-webgui            
+ git reset --hard HEAD # latest commit of current branch            
  git reset --hard 61237694001ef1ef26e0c7d9e7c57e2f442cbeb6 # to a specific commit`
 
