@@ -15,6 +15,9 @@ Global Setup
 ```
 git config --global user.email <mail>
 git config --global user.name <name>
+git config --global --unset <property>
+# create alias
+git config --global alias.lg "log --graph --pretty=format:'%C(bold red)%H%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold yellow)<%an>%Creset' --abbrev-commit --date=relative"
 # read settings
 git config -l
 ```
@@ -44,8 +47,8 @@ git clone <uri> <optional-local-path>
   `GIT_SSH_COMMAND="ssh -v" git clone <url>`
 
 * merge-tool  
-  `git config --global merge.tool WinMerge  
-   git config --global diff.tool WinMerge`
+  `git config --global merge.tool WinMerge  
+   git config --global diff.tool WinMerge` 
 
 ### Read
 
@@ -70,13 +73,13 @@ git clone <uri> <optional-local-path>
   `git diff master feature/<x>`
 
 * rename  
-  `git branch -m <newname> # if inside to rename branch                                                                
+  `git branch -m <newname> # if inside to rename branch                                                                  
    git branch -m <old-name> <new-name> # when not inside branch to rename`
 
 * delete  
-  `git branch -d the_deletedbranch # local repository                                                          
-   git push origin :thedeletedbranch # push delete to remote origin                      
-   git push origin --delete thedeletedbranch # or like this                    
+  `git branch -d the_deletedbranch # local repository                                                            
+   git push origin :thedeletedbranch # push delete to remote origin                        
+   git push origin --delete thedeletedbranch # or like this                      
    git fetch origin --prune # remove local refs to branches that dont exists remote anymore`
 
 * copy files between branches  
@@ -106,22 +109,22 @@ create
 `git tag -a v3.6.13 -m "first tag ref#39046 1min"`
 
 push to origin  
-`git push origin master --tags  # pushed all local tags                                              
+`git push origin master --tags  # pushed all local tags                                                
  git push origin v2.0.4         # pushed only tag v2.0.4`
 
 delete  
-`git tag --delete v1.5.7 # delete local                                            
+`git tag --delete v1.5.7 # delete local                                              
  git push origin :v1.5.7 # push delete action to origin`
 
 ### Reverts
 
 Re-checkout over local changed work copy  
-`git checkout -- <project>/src/main/java/<path/to>.java # reset specific file                                        
+`git checkout -- <project>/src/main/java/<path/to>.java # reset specific file                                          
  git checkout -- . # try to re-checkout anything`
 
 Re-set hard \(remove any local changes and additions\) local working copy to latest repo version  
-`git reset --hard origin/webcat-webgui                                                          
- git reset --hard HEAD # latest commit of current branch                                                          
+`git reset --hard origin/webcat-webgui                                                            
+ git reset --hard HEAD # latest commit of current branch                                                            
  git reset --hard 61237694001ef1ef26e0c7d9e7c57e2f442cbeb6 # to a specific commit`
 
 amend stuff  
@@ -132,16 +135,16 @@ amend even all message back from specific commit \(argh!\)
 ```
 git rebase -i <commit-hash>
 git commit --amend --author="Uwe Hartwig <uwe.hartwig@bitsrc.info>"
-git rebase --continue 
+git rebase --continue
 ```
 
 revert to specific commit  
-`git revert --strategy resolve 398c2c1826133c18deecdf16e3db9df2ff11bcc4` 
+`git revert --strategy resolve 398c2c1826133c18deecdf16e3db9df2ff11bcc4`
 
 ### Stashes
 
 `git stash # add current commit stage to stash`  
-`git stash pop # remove last stash from stack and returns it                                
+`git stash pop # remove last stash from stack and returns it                                  
  git stash list # list all stashed commits`
 
 ### Git-Hooks
