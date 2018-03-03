@@ -41,11 +41,22 @@ git clone <uri> <optional-local-path>
   git checkout master
   git merge not_yet_master
   ```
-* compare branches:`git diff master feature/<x>`
+* compare branches  
+  `git diff master feature/<x>`
+
+* rename  
+  `git branch -m <newname> # if inside to rename branch  
+   git branch -m <old-name> <new-name> # when not inside branch to rename`
 
 * delete
+
   * local:`git branch -d the_deleted_branch`
   * push:`git push origin :the_deleted_branch`
+
+* copy files between branches
+  `git checkout <des-branch>`
+  `git checkout <src-branch> <file/package>`
+  `git commit -m "added file/package from src to des"`
 
 ### Commits
 
