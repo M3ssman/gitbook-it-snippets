@@ -32,7 +32,8 @@ git clone <uri> <optional-local-path>
 
 ### Branches
 
-* new from current one: `git checkout -b development`
+* new from current one
+  `git checkout -b development`
 * create new master
 
 * ```
@@ -45,13 +46,12 @@ git clone <uri> <optional-local-path>
   `git diff master feature/<x>`
 
 * rename  
-  `git branch -m <newname> # if inside to rename branch      
+  `git branch -m <newname> # if inside to rename branch        
    git branch -m <old-name> <new-name> # when not inside branch to rename`
 
-* delete
-
-  * local:`git branch -d the_deleted_branch`
-  * push:`git push origin :the_deleted_branch`
+* delete  
+  `git branch -d the_deleted_branch # local repository  
+   git push origin :the_deleted_branch # push delete to remote origin`
 
 * copy files between branches  
   `git checkout <des-branch>`  
@@ -60,15 +60,17 @@ git clone <uri> <optional-local-path>
 
 ### Commits
 
+### Tags
+
+
+
 ### Reverts
 
 Re-checkout over local changed work copy  
-`git checkout -- adword-imports-data/src/main/java/com/unister/semweb/adword/imports/data/impl/JdbcSemDAO.java` 
+`git checkout -- adword-imports-data/src/main/java/com/unister/semweb/adword/imports/data/impl/JdbcSemDAO.java`
 
-Re-set local working copy to latest HEAD repo version  
-`git reset --hard origin/webcat-webgui` 
-
-
-
-
+Re-set local working copy to latest repo version  
+`git reset --hard origin/webcat-webgui  
+ git reset --hard HEAD # latest commit of current branch  
+git reset --hard 61237694001ef1ef26e0c7d9e7c57e2f442cbeb6 # to a specific commit` 
 
