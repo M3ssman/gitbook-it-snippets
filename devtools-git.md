@@ -41,8 +41,8 @@ git clone <uri> <optional-local-path>
 
 * new branch development from current one
   `git checkout -b development`
-* create new branch from commit   
-  `git checkout -b old/stage 99fdf81bf44dc889ac4db283a909ec44d83ed04e` 
+* create new branch from commit  
+  `git checkout -b old/stage 99fdf81bf44dc889ac4db283a909ec44d83ed04e`
 
 * create new master
 
@@ -56,11 +56,11 @@ git clone <uri> <optional-local-path>
   `git diff master feature/<x>`
 
 * rename  
-  `git branch -m <newname> # if inside to rename branch                                      
+  `git branch -m <newname> # if inside to rename branch                                        
    git branch -m <old-name> <new-name> # when not inside branch to rename`
 
 * delete  
-  `git branch -d the_deleted_branch # local repository                                
+  `git branch -d the_deleted_branch # local repository                                  
    git push origin :the_deleted_branch # push delete to remote origin`
 
 * copy files between branches  
@@ -81,22 +81,22 @@ create
 `git tag -a v3.6.13 -m "first tag ref#39046 1min"`
 
 push to origin  
-`git push origin master --tags  # pushed all local tags                    
+`git push origin master --tags  # pushed all local tags                      
  git push origin v2.0.4         # pushed only tag v2.0.4`
 
 delete  
-`git tag --delete v1.5.7 # delete local                  
+`git tag --delete v1.5.7 # delete local                    
  git push origin :v1.5.7 # push delete action to origin`
 
 ### Reverts
 
 Re-checkout over local changed work copy  
-`git checkout -- <project>/src/main/java/<path/to>.java # reset specific file              
+`git checkout -- <project>/src/main/java/<path/to>.java # reset specific file                
  git checkout -- . # try to re-checkout anything`
 
 Re-set hard \(remove any local changes and additions\) local working copy to latest repo version  
-`git reset --hard origin/webcat-webgui                                
- git reset --hard HEAD # latest commit of current branch                                
+`git reset --hard origin/webcat-webgui                                  
+ git reset --hard HEAD # latest commit of current branch                                  
  git reset --hard 61237694001ef1ef26e0c7d9e7c57e2f442cbeb6 # to a specific commit`
 
 amed stuff  
@@ -104,6 +104,7 @@ amed stuff
 
 ### Stash
 
-`git stash pop # remove last stash from stack and returns it      
+`git stash # add current commit stage to stash`  
+`git stash pop # remove last stash from stack and returns it        
  git stash list # list all stashed commits`
 
