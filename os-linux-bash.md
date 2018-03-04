@@ -8,6 +8,7 @@
 * how many memory is used
   `ps aux --sort -rss` 
 * packages and sources
+
   ```
   # GPG key addr
   apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
@@ -101,6 +102,7 @@ usermod -aG sudo <migration-lead> ## add user to sudo group
 ### Communication via SSH
 
 * Authentication
+
   ```
   PASS="0BcBx/fn:SKm4g.=xj|Y"
   HOST="as17033001.germanynortheast.cloudapp.microsoftazure.de"
@@ -108,7 +110,7 @@ usermod -aG sudo <migration-lead> ## add user to sudo group
   ssh-copy-id teleportadmin@${HOST} <<< ${PASS}
   ```
 
-* remove outdated know\_hosts entry
+* remove outdated know\_hosts entry  
   ssh-keygen -f "/var/jenkins\_home/.ssh/known\_hosts" -R 89.187.203.228
 
 * execute local script on remote host  
@@ -116,33 +118,13 @@ usermod -aG sudo <migration-lead> ## add user to sudo group
 
 ### Troubleshooting
 
-* when something has been installed
-  grep install /var/log/dpkg.log
+* when something has been installed  
+  grep install /var/log/dpkg.log  
   zcat /var/log/apt/history.log.\*.gz \| cat - /var/log/apt/history.log \| grep -Po '^Commandline:\(?= apt-get\)\(?=.\* install \) \K.\*'  
   cat /var/log/apt/history.log \# last modified log file
 
-* SSH not authorized
+* SSH not authorized  
   check ~/.ssh/authorized\_keys on target machine
-
-
-
-\# Packetquellen zufügen
-
-\#\# GPG key addr
-
-apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-
-\#\# sources.list anpassen
-
-// vim /etc/apt/sources.list.d/docker.list
-
-echo "deb [https://apt.dockerproject.org/repo](https://apt.dockerproject.org/repo) ubuntu-xenial main" &gt;&gt; /etc/apt/sources.list.d/docker.list
-
-\#\# update again before request cached policies or do some installs
-
-apt-get update
-
-
 
 
 
