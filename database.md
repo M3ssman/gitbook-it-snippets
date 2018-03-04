@@ -11,8 +11,9 @@
 
 #### Backup, Import, Dump
 
-* import sql-script  
-  mysql -u username -p -h localhost DATA-BASE-NAME &lt; data.sql
+* import sql-script
+
+  * mysql -u username -p -h localhost DATA-BASE-NAME &lt; data.sql
 
   * import with encoding set  
     mysql -u root --default\_character\_set utf8 --database=&lt;database&gt; &lt; ~/&lt;script&gt;.sq
