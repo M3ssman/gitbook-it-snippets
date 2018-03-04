@@ -5,7 +5,9 @@
 * Infos about Distribution
   lsb\_release -ic  
   cat /etc/\*-release
-
+* how many memory is used
+  `ps aux --sort -rss` 
+* 
 ### Bash Utils
 
 * find
@@ -94,8 +96,6 @@ usermod -aG sudo <migration-lead> ## add user to sudo group
 * when something has been installed
   grep install /var/log/dpkg.log
 
-
-
 \#\#\# OpenSSL
 
 ssh -v &gt;&gt;&gt; OpenSSH\_6.0p1 Debian-4+deb7u6, OpenSSL 1.0.1e 11 Feb 2013 \# s-eta
@@ -129,8 +129,6 @@ echo "deb [https://apt.dockerproject.org/repo](https://apt.dockerproject.org/rep
 \#\# update again before request cached policies or do some installs
 
 apt-get update
-
-
 
 ln -s &lt;target&gt; &lt;name&gt;
 
