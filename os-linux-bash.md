@@ -27,7 +27,6 @@
   # mongodb
   /etc/apt/sources.list.d/mongodb-org-3.4.list
   deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse
-
   ```
 
 ### Bash Utils
@@ -130,197 +129,85 @@ usermod -aG sudo <migration-lead> ## add user to sudo group
 ### Firewall - iptables
 
 * Read
-  iptables -L \# list chains  
+  iptables -L \# list chains
+  ```
+  >>> sample output
+  root@as16090101:~# iptables -L -n --line-numbers
+  Chain INPUT (policy DROP)
+  num  target     prot opt source               destination
+  1    ACCEPT     all  --  127.0.0.0/8          127.0.0.0/8          /* lokale Kommunikation */
+  2    ACCEPT     udp  --  0.0.0.0/0            0.0.0.0/0            udp dpt:68
+  3    SSH        tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:22 /* SSH Chain */
+  4    DOCKER     tcp  --  217.16.162.100       0.0.0.0/0            tcp dpt:80 /* Forward port 80 from teleport to DOCKER */
+  5    DOCKER     tcp  --  192.168.125.0/24     0.0.0.0/0            tcp dpt:80 /* Forward port 80 from teleport to DOCKER */
+  6    DOCKER     tcp  --  192.168.125.0/24     0.0.0.0/0            tcp dpt:2222
+  7    DOCKER     tcp  --  192.168.125.0/24     0.0.0.0/0            tcp dpt:443
+  8    HTTPS      tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:443 /* HTTPS Chain */
+  9    ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp spt:80 dpts:1024:65535 state ESTABLISHED /* HTTP Antwortpakete */
+  10   ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp spt:443 dpts:1024:65535 state ESTABLISHED /* HTTPS Antwortpakete */
+  11   ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp spts:1024:65535 dpts:1024:65535 state ESTABLISHED /* allg. Antwortpakete */
+  12   ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp spts:1024:65535 dpt:53 state ESTABLISHED /* DNS Antwortpakete */
+  13   ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp spt:53 dpts:1024:65535 state ESTABLISHED /* DNS Antwortpakete */
+  14   ACCEPT     udp  --  0.0.0.0/0            0.0.0.0/0            udp spts:1024:65535 dpt:53 state ESTABLISHED /* DNS Antwortpakete */
+  15   ACCEPT     udp  --  0.0.0.0/0            0.0.0.0/0            udp spt:53 dpts:1024:65535 state ESTABLISHED /* DNS Antwortpakete */
+  16   ACCEPT     udp  --  0.0.0.0/0            0.0.0.0/0            udp dpt:123 state ESTABLISHED /* NTP Antwortpakete */
+  17   ACCEPT     tcp  --  40.68.176.28         0.0.0.0/0            tcp dpt:445
+  18   ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp spt:445 dpts:1024:65535 state ESTABLISHED /* SMB Antwortpakete */
+  Chain FORWARD (policy ACCEPT)
+  num  target     prot opt source               destination
+  1    DOCKER-ISOLATION  all  --  0.0.0.0/0            0.0.0.0/0
+  2    DOCKER     all  --  0.0.0.0/0            0.0.0.0/0
+  3    ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED
+  4    ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0
+  5    ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0
+  Chain OUTPUT (policy ACCEPT)
+  num  target     prot opt source               destination
+  Chain DOCKER (5 references)
+  num  target     prot opt source               destination
+  1    ACCEPT     tcp  --  0.0.0.0/0            172.17.0.3           tcp dpt:80
+  Chain DOCKER-ISOLATION (1 references)
+  num  target     prot opt source               destination
+  1    RETURN     all  --  0.0.0.0/0            0.0.0.0/0
+  Chain HTTPS (1 references)
+  num  target     prot opt source               destination
+  1    ACCEPT     all  --  217.16.162.100       0.0.0.0/0            /* HTTPS TELEPORT HAL LAN */
+  2    ACCEPT     all  --  192.168.125.0/24     0.0.0.0/0            /* HTTPS TELEPORT HAL LAN */
+  3    DROP       all  --  0.0.0.0/0            0.0.0.0/0            /* drop WORLD */
+  Chain SSH (1 references)
+  num  target     prot opt source               destination
+  1    ACCEPT     all  --  217.16.162.100       0.0.0.0/0            /* SSH TELEPORT HAL LAN */
+  2    ACCEPT     all  --  192.168.125.0/24     0.0.0.0/0            /* SSH TELEPORT HAL LAN */
+  3    DROP       all  --  0.0.0.0/0            0.0.0.0/0            /* drop WORLD */
+  ```
+
+* read with number of rules
+  iptables -L -n --line-numbers
+
+* add entry
+  * append to end  
+    iptables -A &lt;chain&gt; -p &lt;protocol&gt; -i &lt;eth-nic&gt; -j &lt;target-action&gt; --dport &lt;port&gt; -s &lt;source-ip&gt;  
+    iptables -A INPUT -j ACCEPT -p tcp -i eth0 --dport 22
+
+  * at pos n \(default is 1\)  
+    iptables -I &lt;chain&gt; &lt;n&gt; -j &lt;target&gt; -p &lt;protocol&gt; -i &lt;nic&gt; -s &lt;source-ips&gt;  
+    iptables -I HTTPS \[1\] -j ACCEPT -p tcp -i eth0 --dport 80 -s 192.168.125.67  
+    iptables -I INPUT 4 -j DOCKER -p tcp -i eth0 --dport 80 -s 192.168.125.0/24
+* add rules   
+  iptables -I INPUT 9 -j HTTPS -p tcp -i eth0 --dport 9091 -m comment --comment "HTTPS CHAIN" \(docker registry\)   
+  iptables -I INPUT 10 -j HTTPS -p tcp -i eth0 --dport 9092 -m comment --comment "HTTPS CHAIN NPM Registry" \(npm registry\)
+
+* add with comment \(-m comment --comment "limit ssh access"\)  
+  iptables -I TELEPORT-DOCKER 1 -j ACCEPT -p tcp -s 217.16.162.100 -i eth0 --dport 2222 -m comment --comment "SSH2 TELEPORT HAL LAN"  
+  iptables -I TELEPORT-DOCKER 1 -j ACCEPT -p tcp -s 192.168.125.0/24 -i eth0 --dport 2222 -m comment --comment "SSH2 TELEPORT HAL LAN"  
+  iptables -I INPUT 4 -j TELEPORT -p tcp -i eth0 --sport 80 -m comment --comment "forward port 80"  
+  iptables -I INPUT 5 -j TELEPORT -p tcp -i eth0 --sport 8080 -m comment --comment "forward port 8080"  
+  iptables -I INPUT 6 -j TELEPORT -p tcp -i eth0 --sport 443 -m comment --comment "forward port 443"  
+  iptables -I INPUT 7 -j TELEPORT -p tcp -i eth0 --sport 2222 -m comment --comment "forward port 2222"
+
+* delete entry  
+  iuptable -D &lt;chain&gt; &lt;n&gt;
 
-&gt;&gt;&gt; sample output
 
-root@as16090101:~\# iptables -L -n --line-numbers
-
-Chain INPUT \(policy DROP\)
-
-num  target     prot opt source               destination
-
-1    ACCEPT     all  --  127.0.0.0/8          127.0.0.0/8          /\* lokale Kommunikation \*/
-
-2    ACCEPT     udp  --  0.0.0.0/0            0.0.0.0/0            udp dpt:68
-
-3    SSH        tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:22 /\* SSH Chain \*/
-
-4    DOCKER     tcp  --  217.16.162.100       0.0.0.0/0            tcp dpt:80 /\* Forward port 80 from teleport to DOCKER \*/
-
-5    DOCKER     tcp  --  192.168.125.0/24     0.0.0.0/0            tcp dpt:80 /\* Forward port 80 from teleport to DOCKER \*/
-
-6    DOCKER     tcp  --  192.168.125.0/24     0.0.0.0/0            tcp dpt:2222
-
-7    DOCKER     tcp  --  192.168.125.0/24     0.0.0.0/0            tcp dpt:443
-
-8    HTTPS      tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:443 /\* HTTPS Chain \*/
-
-9    ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp spt:80 dpts:1024:65535 state ESTABLISHED /\* HTTP Antwortpakete \*/
-
-10   ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp spt:443 dpts:1024:65535 state ESTABLISHED /\* HTTPS Antwortpakete \*/
-
-11   ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp spts:1024:65535 dpts:1024:65535 state ESTABLISHED /\* allg. Antwortpakete \*/
-
-12   ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp spts:1024:65535 dpt:53 state ESTABLISHED /\* DNS Antwortpakete \*/
-
-13   ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp spt:53 dpts:1024:65535 state ESTABLISHED /\* DNS Antwortpakete \*/
-
-14   ACCEPT     udp  --  0.0.0.0/0            0.0.0.0/0            udp spts:1024:65535 dpt:53 state ESTABLISHED /\* DNS Antwortpakete \*/
-
-15   ACCEPT     udp  --  0.0.0.0/0            0.0.0.0/0            udp spt:53 dpts:1024:65535 state ESTABLISHED /\* DNS Antwortpakete \*/
-
-16   ACCEPT     udp  --  0.0.0.0/0            0.0.0.0/0            udp dpt:123 state ESTABLISHED /\* NTP Antwortpakete \*/
-
-17   ACCEPT     tcp  --  40.68.176.28         0.0.0.0/0            tcp dpt:445
-
-18   ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp spt:445 dpts:1024:65535 state ESTABLISHED /\* SMB Antwortpakete \*/
-
-
-
-Chain FORWARD \(policy ACCEPT\)
-
-num  target     prot opt source               destination
-
-1    DOCKER-ISOLATION  all  --  0.0.0.0/0            0.0.0.0/0
-
-2    DOCKER     all  --  0.0.0.0/0            0.0.0.0/0
-
-3    ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED
-
-4    ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0
-
-5    ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0
-
-
-
-Chain OUTPUT \(policy ACCEPT\)
-
-num  target     prot opt source               destination
-
-
-
-Chain DOCKER \(5 references\)
-
-num  target     prot opt source               destination
-
-1    ACCEPT     tcp  --  0.0.0.0/0            172.17.0.3           tcp dpt:80
-
-
-
-Chain DOCKER-ISOLATION \(1 references\)
-
-num  target     prot opt source               destination
-
-1    RETURN     all  --  0.0.0.0/0            0.0.0.0/0
-
-
-
-Chain HTTPS \(1 references\)
-
-num  target     prot opt source               destination
-
-1    ACCEPT     all  --  217.16.162.100       0.0.0.0/0            /\* HTTPS TELEPORT HAL LAN \*/
-
-2    ACCEPT     all  --  192.168.125.0/24     0.0.0.0/0            /\* HTTPS TELEPORT HAL LAN \*/
-
-3    DROP       all  --  0.0.0.0/0            0.0.0.0/0            /\* drop WORLD \*/
-
-
-
-Chain SSH \(1 references\)
-
-num  target     prot opt source               destination
-
-1    ACCEPT     all  --  217.16.162.100       0.0.0.0/0            /\* SSH TELEPORT HAL LAN \*/
-
-2    ACCEPT     all  --  192.168.125.0/24     0.0.0.0/0            /\* SSH TELEPORT HAL LAN \*/
-
-3    DROP       all  --  0.0.0.0/0            0.0.0.0/0            /\* drop WORLD \*/
-
-
-
-
-
-\#\# add entry
-
-\#\#\# append to end
-
-iptables -A &lt;chain&gt; -p &lt;protocol&gt; -i &lt;eth-nic&gt; -j &lt;target-action&gt; --dport &lt;port&gt; -s &lt;source-ip&gt;
-
-iptables -A INPUT -j ACCEPT -p tcp -i eth0 --dport 22
-
-\#\#\# insert into CHAIN at pos n, implizit "1"
-
-iptables -I &lt;chain&gt; &lt;n&gt; -j &lt;target&gt; -p &lt;protocol&gt; -i &lt;nic&gt; -s &lt;source-ips&gt;
-
-iptables -I HTTPS \[1\] -j ACCEPT -p tcp -i eth0 --dport 80 -s 192.168.125.67
-
-iptables -I INPUT 4 -j DOCKER -p tcp -i eth0 --dport 80 -s 192.168.125.0/24
-
-\#\#\# add rule for Docker Registry
-
-iptables -I INPUT 9 -j HTTPS -p tcp -i eth0 --dport 9091 -m comment --comment "HTTPS CHAIN"
-
-\#\#\# add rule for NPM Registry
-
-iptables -I INPUT 10 -j HTTPS -p tcp -i eth0 --dport 9092 -m comment --comment "HTTPS CHAIN NPM Registry"
-
-
-
-\#\#\# + kommentar
-
--m comment --comment "limit ssh access" 
-
-\#\#\#
-
-iptables -I TELEPORT-DOCKER 1 -j ACCEPT -p tcp -s 217.16.162.100 -i eth0 --dport 2222 -m comment --comment "SSH2 TELEPORT HAL LAN"
-
-iptables -I TELEPORT-DOCKER 1 -j ACCEPT -p tcp -s 192.168.125.0/24 -i eth0 --dport 2222 -m comment --comment "SSH2 TELEPORT HAL LAN"
-
-iptables -I INPUT 4 -j TELEPORT -p tcp -i eth0 --sport 80 -m comment --comment "forward port 80"
-
-iptables -I INPUT 5 -j TELEPORT -p tcp -i eth0 --sport 8080 -m comment --comment "forward port 8080"
-
-iptables -I INPUT 6 -j TELEPORT -p tcp -i eth0 --sport 443 -m comment --comment "forward port 443"
-
-iptables -I INPUT 7 -j TELEPORT -p tcp -i eth0 --sport 2222 -m comment --comment "forward port 2222"
-
-
-
-
-
-
-
-\#\# del entry
-
-iuptable -D &lt;chain&gt; &lt;n&gt;
-
-\#\#\# n kriegt man raus mittels 
-
-iptables -L -n --line-numbers
-
-
-
-\# NETSTAT
-
-\# was so läuft
-
-netstat --inet -pln
-
-&gt;&gt;&gt; sample output
-
-root@as16090101:~\# netstat --inet -pln
-
-Active Internet connections \(only servers\)
-
-Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
-
-tcp        0      0 127.0.0.1:29131         0.0.0.0:\*               LISTEN      2392/mdsd
-
-tcp        0      0 0.0.0.0:22              0.0.0.0:\*               LISTEN      37761/sshd
-
-udp        0      0 0.0.0.0:68              0.0.0.0:\*                           1145/dhclient
 
 ### Troubleshooting
 
