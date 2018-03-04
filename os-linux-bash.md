@@ -1,5 +1,13 @@
 ## OS Linux Bash
 
+### Systeminfo
+
+* Infos about Distribution
+  lsb\_release -ic  
+  cat /etc/\*-release
+
+### Bash Utils
+
 * find
   * folders with pattern `find / -path "*.git"`
   * files with pattern `find / -name "http.conf" -type f` 
@@ -29,7 +37,9 @@
 
     ls -t --full-time /var/log/nodejs \| head -5 \`
 
-  * 
+* ln  
+  ln -s &lt;target&gt; &lt;name&gt; \# create symbolic link  
+  ln -sfn &lt;target&gt; &lt;existing name&gt; \# update
 
 * process lists
 
@@ -84,21 +94,7 @@ usermod -aG sudo <migration-lead> ## add user to sudo group
 * when something has been installed
   grep install /var/log/dpkg.log
 
-\# OS Infos
 
-lsb\_release -ic
-
-cat /etc/\*-release
-
-\#\# Security
-
-\#\#\# Neues Passwort
-
-pswgen -b1s 16 &gt;&gt; 3C7tiYXsWFtcjiCw
-
-\#\#\# create me on psw with 16 chars containg special chars but avoid ambiguous ones like "l/1" and "O/0"
-
-pwgen --symbols --ambiguous 16 1
 
 \#\#\# OpenSSL
 
@@ -118,8 +114,6 @@ ssh-copy-id teleportadmin@${HOST} &lt;&lt;&lt; ${PASS}
 
 ssh-keygen -f "/var/jenkins\_home/.ssh/known\_hosts" -R 89.187.203.228
 
-\# MANAGEMENT von PACKET\_QUELLEN
-
 \# Packetquellen zufügen
 
 \#\# GPG key addr
@@ -136,23 +130,7 @@ echo "deb [https://apt.dockerproject.org/repo](https://apt.dockerproject.org/rep
 
 apt-get update
 
-\# USER MANAGEMENT
 
-\#\# create one
-
-adduser &lt;user&gt;
-
-id -u USERNAME \# uid
-
-id -g USERNAME \# gid
-
-\#\# add to sudo group
-
-usermod -aG sudo &lt;migration-lead&gt;
-
-\# Verlinken
-
-create
 
 ln -s &lt;target&gt; &lt;name&gt;
 
