@@ -7,10 +7,21 @@
   cat /etc/\*-release
 * how many memory is used
   `ps aux --sort -rss` 
-* 
+* packages and sources
+  ```
+  # GPG key addr
+  apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+  vim /etc/apt/sources.list.d/docker.list # sources.list update
+
+  echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" >> /etc/apt/sources.list.d/docker.list
+
+  apt-get update # update before request cached policies or installs
+  ```
+
 ### Bash Utils
 
 * find
+
   * folders with pattern `find / -path "*.git"`
   * files with pattern `find / -name "http.conf" -type f` 
   * `find . -name '*.js.map' -delete` 
@@ -18,6 +29,7 @@
     * `find ${BUILD_ROOT}/controllers -name "*.js.map" -exec rm -v {} +` 
     * `find . -size +2M -exec rm {} +`  
   * direct subfolders `find <folder> -mindepth 1 -maxdepth 1 -type d | wc -l`  
+
 * count space on devices
 
   * du -sh &lt;folder&gt;
@@ -42,11 +54,6 @@
 * ln  
   ln -s &lt;target&gt; &lt;name&gt; \# create symbolic link  
   ln -sfn &lt;target&gt; &lt;existing name&gt; \# update
-
-* process lists
-
-  * how many memory is used? 
-    `ps aux --sort -rss` 
 
 * mount  
   mount from host as shared VM volume  
@@ -91,28 +98,33 @@ id -g USERNAME # gid
 usermod -aG sudo <migration-lead> ## add user to sudo group
 ```
 
+### Communication via SSH
+
+* Authentication
+  ```
+  PASS="0BcBx/fn:SKm4g.=xj|Y"
+  HOST="as17033001.germanynortheast.cloudapp.microsoftazure.de"
+  ssh-keyscan ${HOST} > ~/.ssh/known_hosts
+  ssh-copy-id teleportadmin@${HOST} <<< ${PASS}
+  ```
+
+* remove outdated know\_hosts entry
+  ssh-keygen -f "/var/jenkins\_home/.ssh/known\_hosts" -R 89.187.203.228
+
+* execute local script on remote host  
+  ssh root@MachineB '/bin/bash -s' &lt; local\_script.sh
+
 ### Troubleshooting
 
 * when something has been installed
   grep install /var/log/dpkg.log
+  zcat /var/log/apt/history.log.\*.gz \| cat - /var/log/apt/history.log \| grep -Po '^Commandline:\(?= apt-get\)\(?=.\* install \) \K.\*'  
+  cat /var/log/apt/history.log \# last modified log file
 
-\#\#\# OpenSSL
+* SSH not authorized
+  check ~/.ssh/authorized\_keys on target machine
 
-ssh -v &gt;&gt;&gt; OpenSSH\_6.0p1 Debian-4+deb7u6, OpenSSL 1.0.1e 11 Feb 2013 \# s-eta
 
-\#\#\# SSH Auth einrichten
-
-PASS="0BcBx/fn:SKm4g.=xj\|Y"
-
-HOST="as17033001.germanynortheast.cloudapp.microsoftazure.de"
-
-ssh-keyscan ${HOST} &gt; ~/.ssh/known\_hosts
-
-ssh-copy-id teleportadmin@${HOST} &lt;&lt;&lt; ${PASS}
-
-\#\#\# veralteten known\_host eintrag entfernen
-
-ssh-keygen -f "/var/jenkins\_home/.ssh/known\_hosts" -R 89.187.203.228
 
 \# Packetquellen zufügen
 
@@ -130,31 +142,9 @@ echo "deb [https://apt.dockerproject.org/repo](https://apt.dockerproject.org/rep
 
 apt-get update
 
-ln -s &lt;target&gt; &lt;name&gt;
 
-update
 
-ln -sfn &lt;target&gt; &lt;existing name&gt;
 
-\# SECURE SHELL && SECURE COPY
 
-\#\# script file lokal auf remote host ausführen
 
-ssh root@MachineB '/bin/bash -s' &lt; local\_script.sh
-
-\# welche Datei muss auf dem Target vorhanden sein ?
-
-~/.ssh/authorized\_keys
-
-\# ARCHIVIERUNG
-
-tar -cf &lt;file&gt; &lt;folder&gt;
-
-// was wurde denn so aktualisiert ?
-
-zcat /var/log/apt/history.log.\*.gz \| cat - /var/log/apt/history.log \| grep -Po '^Commandline:\(?= apt-get\)\(?=.\* install \) \K.\*'
-
-// bzw die letze log datei
-
-cat /var/log/apt/history.log
 
