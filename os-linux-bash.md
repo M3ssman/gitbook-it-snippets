@@ -99,6 +99,131 @@
 * tar  
   tar -cf &lt;file&gt; &lt;folder&gt;
 
+### Bash Programming
+
+    # first try
+    A=`cut -d 'G' -f1 <<< $(du -sh /usr/local/hudson)`; B=`sed s/G//g <<< $(du -sh /usr/local/hudson/maven)`; echo ${A} - ${B}
+
+    # better
+    A=`cut -d 'G' -f1 <<< $(du -sh /usr/local/hudson)`; B=`cut -d 'G' -f1 <<< $(du -sh /usr/local/hudson/maven)`; echo $((${A} - ${B}))
+
+* split strings and make em array
+  for i in $\(echo $IN \| tr ";" "\n"\)
+
+* modifying a variable within a ${} is known as 'parameter expansion'  
+  AS=\(${1///// }\)
+
+* param expansion with read in  
+  IFS=';' read -ra ADDR &lt;&lt;&lt; "$IN"  
+
+* iterate
+
+* for i in "${ADDR\[@\]}"
+
+
+
+
+
+\#\#\# +einlesen
+
+
+
+\#\#\# iterieren
+
+A=$\(find backup\_migrated/t3extension\_\* \); for e in ${A} ; do if \[\[ ${e} == \*".git"  \]\] ; then echo "hidden\[\] = '/home/git/${e}'" ; fi ; done;
+
+\#\#\# iterieren mit counter variable
+
+A=$\(find backup\_migrated/t3extension\_\* \); S=0; for e in ${A} ; do if \[\[ ${e} == \*".git" \]\] ; then echo ${e} &&  \(\(S = S+1\)\) ; fi ; done; echo ${S}
+
+\#\#\# iterieren mit parameter expansion
+
+for E in \`find jobs -type f\`; do F=${E/jobs\//}; echo ${F/.xml/}; done;
+
+\#\# datei exists ?
+
+if \[\[ -f "file"\]\] ; then
+
+
+
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; BEISPIELE
+
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Forever restart script
+
+\#! /bin/bash
+
+\# define valid Portal Shortnames:
+
+PORTALS=\("st","rp","sh","mv"\)
+
+function show\_err {
+
+   echo -e "\nError: ${1} ! Invalid Args: use &lt;script&gt; \[st\|rp\|sh\|mv\] &lt;PORT&gt; &lt;SECURE\_PORT&gt;!\n"
+
+}
+
+
+
+C=${\#}
+
+echo -e "\nRestart ID NodeJS Portal Application @\`date\`\nUsing args\(count:${C}\) -&gt; ${@}...\n"
+
+
+
+if \[\[ "${C}" -ne 3 \]\]; then
+
+  show\_err "args not 3"
+
+  exit
+
+fi
+
+
+
+if \[\[ ! "${PORTALS}" =~ "${1}"  \]\]; then
+
+  show\_err "portal unknown"
+
+  exit
+
+fi
+
+
+
+\# convert
+
+PORTAL=${1}
+
+\# shutodown
+
+forever stop /opt/nodejs/id-portal-${PORTAL}/app.js
+
+LOG\_OUT=/var/log/nodejs/id-portal-${PORTAL}/id-portal-${PORTAL}.out
+
+if \[\[ -f ${LOG\_OUT} \]\] ; then
+
+  rm ${LOG\_OUT}
+
+fi
+
+LOG\_ERR=/var/log/nodejs/id-portal-${PORTAL}/id-portal-${PORTAL}.err
+
+if \[\[ -f ${LOG\_ERR} \]\] ; then
+
+  rm ${LOG\_ERR}
+
+fi
+
+\# startup
+
+NODE\_ENV=production PORT=${2} PORT\_SECURE=${3} forever -o ${LOG\_OUT} -e ${LOG\_ERR} --sourceDir /opt/nodejs/id-portal-${PORTAL}/ start app.js
+
+\# list processes
+
+forever list
+
+&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+
 ### Usermanagement
 
 ```
@@ -128,8 +253,9 @@ usermod -aG sudo <migration-lead> ## add user to sudo group
 
 ### Firewall - iptables
 
-* Read
+* Read  
   iptables -L \# list chains
+
   ```
   >>> sample output
   root@as16090101:~# iptables -L -n --line-numbers
@@ -180,10 +306,11 @@ usermod -aG sudo <migration-lead> ## add user to sudo group
   3    DROP       all  --  0.0.0.0/0            0.0.0.0/0            /* drop WORLD */
   ```
 
-* read with number of rules
+* read with number of rules  
   iptables -L -n --line-numbers
 
 * add entry
+
   * append to end  
     iptables -A &lt;chain&gt; -p &lt;protocol&gt; -i &lt;eth-nic&gt; -j &lt;target-action&gt; --dport &lt;port&gt; -s &lt;source-ip&gt;  
     iptables -A INPUT -j ACCEPT -p tcp -i eth0 --dport 22
@@ -192,8 +319,9 @@ usermod -aG sudo <migration-lead> ## add user to sudo group
     iptables -I &lt;chain&gt; &lt;n&gt; -j &lt;target&gt; -p &lt;protocol&gt; -i &lt;nic&gt; -s &lt;source-ips&gt;  
     iptables -I HTTPS \[1\] -j ACCEPT -p tcp -i eth0 --dport 80 -s 192.168.125.67  
     iptables -I INPUT 4 -j DOCKER -p tcp -i eth0 --dport 80 -s 192.168.125.0/24
-* add rules   
-  iptables -I INPUT 9 -j HTTPS -p tcp -i eth0 --dport 9091 -m comment --comment "HTTPS CHAIN" \(docker registry\)   
+
+* add rules  
+  iptables -I INPUT 9 -j HTTPS -p tcp -i eth0 --dport 9091 -m comment --comment "HTTPS CHAIN" \(docker registry\)  
   iptables -I INPUT 10 -j HTTPS -p tcp -i eth0 --dport 9092 -m comment --comment "HTTPS CHAIN NPM Registry" \(npm registry\)
 
 * add with comment \(-m comment --comment "limit ssh access"\)  
@@ -206,8 +334,6 @@ usermod -aG sudo <migration-lead> ## add user to sudo group
 
 * delete entry  
   iuptable -D &lt;chain&gt; &lt;n&gt;
-
-
 
 ### Troubleshooting
 
