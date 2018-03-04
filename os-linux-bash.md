@@ -107,122 +107,76 @@
     # better
     A=`cut -d 'G' -f1 <<< $(du -sh /usr/local/hudson)`; B=`cut -d 'G' -f1 <<< $(du -sh /usr/local/hudson/maven)`; echo $((${A} - ${B}))
 
-* split strings and make em array
+* split strings and make em array  
   for i in $\(echo $IN \| tr ";" "\n"\)
 
 * modifying a variable within a ${} is known as 'parameter expansion'  
   AS=\(${1///// }\)
 
 * param expansion with read in  
-  IFS=';' read -ra ADDR &lt;&lt;&lt; "$IN"  
+  IFS=';' read -ra ADDR &lt;&lt;&lt; "$IN"
 
-* iterate
+#### Iterate
 
 * for i in "${ADDR\[@\]}"
 
+* A=$\(find backup\_migrated/t3extension\_\* \); for e in ${A} ; do if \[\[ ${e} == \*".git"  \]\] ; then echo "hidden\[\] = '/home/git/${e}'" ; fi ; done;
+
+* iterate with counter  
+  A=$\(find backup\_migrated/t3extension\_\* \); S=0; for e in ${A} ; do if \[\[ ${e} == \*".git" \]\] ; then echo ${e} &&  \(\(S = S+1\)\) ; fi ; done; echo ${S}
+
+* iterate with param exp  
+  for E in \`find jobs -type f\`; do F=${E/jobs\//}; echo ${F/.xml/}; done;
+
+#### Conditions
+
+* file exists ?
+  if \[\[ -f "file"\]\] ; then
+
+#### Examples
+
+    #! /bin/bash
+    # define valid Portal Shortnames:
+    PORTALS=("st","rp","sh","mv")
+
+    function show_err {
+        echo -e "\nError: ${1} ! Invalid Args: use <script> [st|rp|sh|mv] <PORT> <SECURE_PORT>!\n"
+    }
+
+    C=${#}
+    echo -e "\nRestart ID NodeJS Portal Application @`date`\nUsing args(count:${C}) -> ${@}...\n"
+
+    if [[ "${C}" -ne 3 ]]; then
+        show_err "args not 3"
+        exit
+    fi
+
+    if [[ ! "${PORTALS}" =~ "${1}"  ]]; then
+        show_err "portal unknown"
+        exit
+    fi
+
+    # convert
+    PORTAL=${1}
+
+    # shutodown
+    forever stop /opt/nodejs/id-portal-${PORTAL}/app.js
+    LOG_OUT=/var/log/nodejs/id-portal-${PORTAL}/id-portal-${PORTAL}.out
+    if [[ -f ${LOG_OUT} ]] ; then
+        rm ${LOG_OUT}
+    fi
+
+    LOG_ERR=/var/log/nodejs/id-portal-${PORTAL}/id-portal-${PORTAL}.err
+    if [[ -f ${LOG_ERR} ]] ; then
+        rm ${LOG_ERR}
+    fi
+
+    # startup
+    NODE_ENV=production PORT=${2} PORT_SECURE=${3} forever -o ${LOG_OUT} -e ${LOG_ERR} --sourceDir /opt/nodejs/id-portal-${PORTAL}/ start app.js
+    # list processes
+    forever list
 
 
-
-
-\#\#\# +einlesen
-
-
-
-\#\#\# iterieren
-
-A=$\(find backup\_migrated/t3extension\_\* \); for e in ${A} ; do if \[\[ ${e} == \*".git"  \]\] ; then echo "hidden\[\] = '/home/git/${e}'" ; fi ; done;
-
-\#\#\# iterieren mit counter variable
-
-A=$\(find backup\_migrated/t3extension\_\* \); S=0; for e in ${A} ; do if \[\[ ${e} == \*".git" \]\] ; then echo ${e} &&  \(\(S = S+1\)\) ; fi ; done; echo ${S}
-
-\#\#\# iterieren mit parameter expansion
-
-for E in \`find jobs -type f\`; do F=${E/jobs\//}; echo ${F/.xml/}; done;
-
-\#\# datei exists ?
-
-if \[\[ -f "file"\]\] ; then
-
-
-
-&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; BEISPIELE
-
-&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Forever restart script
-
-\#! /bin/bash
-
-\# define valid Portal Shortnames:
-
-PORTALS=\("st","rp","sh","mv"\)
-
-function show\_err {
-
-   echo -e "\nError: ${1} ! Invalid Args: use &lt;script&gt; \[st\|rp\|sh\|mv\] &lt;PORT&gt; &lt;SECURE\_PORT&gt;!\n"
-
-}
-
-
-
-C=${\#}
-
-echo -e "\nRestart ID NodeJS Portal Application @\`date\`\nUsing args\(count:${C}\) -&gt; ${@}...\n"
-
-
-
-if \[\[ "${C}" -ne 3 \]\]; then
-
-  show\_err "args not 3"
-
-  exit
-
-fi
-
-
-
-if \[\[ ! "${PORTALS}" =~ "${1}"  \]\]; then
-
-  show\_err "portal unknown"
-
-  exit
-
-fi
-
-
-
-\# convert
-
-PORTAL=${1}
-
-\# shutodown
-
-forever stop /opt/nodejs/id-portal-${PORTAL}/app.js
-
-LOG\_OUT=/var/log/nodejs/id-portal-${PORTAL}/id-portal-${PORTAL}.out
-
-if \[\[ -f ${LOG\_OUT} \]\] ; then
-
-  rm ${LOG\_OUT}
-
-fi
-
-LOG\_ERR=/var/log/nodejs/id-portal-${PORTAL}/id-portal-${PORTAL}.err
-
-if \[\[ -f ${LOG\_ERR} \]\] ; then
-
-  rm ${LOG\_ERR}
-
-fi
-
-\# startup
-
-NODE\_ENV=production PORT=${2} PORT\_SECURE=${3} forever -o ${LOG\_OUT} -e ${LOG\_ERR} --sourceDir /opt/nodejs/id-portal-${PORTAL}/ start app.js
-
-\# list processes
-
-forever list
-
-&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 
 ### Usermanagement
 
