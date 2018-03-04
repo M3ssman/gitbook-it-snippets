@@ -36,21 +36,23 @@
   * how many memory is used? 
     `ps aux --sort -rss` 
 
-* mount
+* mount  
   mount from host as shared VM volume  
   mount -t vboxsf Z\_DRIVE /share/azure/gitlab-data/
 
-* cp
+* cp  
   cp &lt;src&gt; &lt;dest&gt; -a \# also copy links
 
 * curl
-  * redirects
+
+  * redirects  
     curl -&lt;follow redirs&gt; -&lt;name-like-remote&gt; &lt;url&gt;  
     curl -L -O [http://download.sonatype.com/nexus/3/latest-unix.tar.gz](http://download.sonatype.com/nexus/3/latest-unix.tar.gz)
 
   * scp  
     scp src.file user@host:/folder/dest.file \# local =&gt; remote  
     scp user@host:/folder/src.file dest.file \# remote =&gt; local
+
 * mecache  
   echo "stats cachedump 15 4 " \| nc 127.0.0.1 11211
 
@@ -60,12 +62,8 @@
 * netstat  
   netstat -tulpn \# network usage of processes
 
-* pwgen  
-  
-  \#\#\# Neues Passwort
-
-  pswgen -b1s 16 \# create psw with 16 chars + special chars - ambiguous ones like "l/1" and "O/0"
-
+* pwgen - Password Generation  
+  pswgen -b1s 16 \# create psw with 16 chars + special chars - ambiguous ones like "l/1" and "O/0"  
   pwgen --symbols --ambiguous 16 1
 
 * tar  
@@ -85,10 +83,6 @@ usermod -aG sudo <migration-lead> ## add user to sudo group
 
 * when something has been installed
   grep install /var/log/dpkg.log
-
-
-
-
 
 \# OS Infos
 
@@ -180,8 +174,6 @@ ssh root@MachineB '/bin/bash -s' &lt; local\_script.sh
 
 tar -cf &lt;file&gt; &lt;folder&gt;
 
-
-
 // was wurde denn so aktualisiert ?
 
 zcat /var/log/apt/history.log.\*.gz \| cat - /var/log/apt/history.log \| grep -Po '^Commandline:\(?= apt-get\)\(?=.\* install \) \K.\*'
@@ -189,6 +181,4 @@ zcat /var/log/apt/history.log.\*.gz \| cat - /var/log/apt/history.log \| grep -P
 // bzw die letze log datei
 
 cat /var/log/apt/history.log
-
-
 
